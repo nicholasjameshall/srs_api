@@ -1,0 +1,19 @@
+# .gitignore
+
+# Environment variables
+.env
+
+# Python specific
+*.pyc
+__pycache__/
+venv/
+.pytest_cache/
+.coverage
+
+# Database
+*.sqlite3
+/db.sqlite3
+
+# OS specific
+.DS_Store
+.vscode/ # If you use VS Code and want to ignore its settings
