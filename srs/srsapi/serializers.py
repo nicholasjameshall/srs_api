@@ -1,4 +1,4 @@
-from django.contrib.auth.models import Group, User
+from django.contrib.auth.models import User
 from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
@@ -6,24 +6,10 @@ from rest_framework.validators import UniqueValidator
 from srs.srsapi.models import Word
 
 
-class UserSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = User
-        fields = ["url", "username", "email", "groups"]
-
-
-class GroupSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = Group
-        fields = ["url", "name"]
-
-
 class WordSerializer(serializers.HyperlinkedModelSerializer):
-    owner = serializers.ReadOnlyField(source="owner")
-
     class Meta:
         model = Word
-        fields = ["id", "text", "last_reviewed"]
+        fields = ["id", "text", "last_reviewed", "owner"]
         read_only_fields = ["owner"]
 
 

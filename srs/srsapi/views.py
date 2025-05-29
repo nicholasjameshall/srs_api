@@ -1,37 +1,11 @@
-from django.contrib.auth.models import Group, User
+from django.contrib.auth.models import User
 from rest_framework import generics, permissions, status, viewsets
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 from srs.srsapi.models import Word
-from srs.srsapi.permissions import IsOwnerOfObject
-from srs.srsapi.serializers import (
-    GroupSerializer,
-    RegisterSerializer,
-    UserSerializer,
-    WordSerializer,
-)
-
-
-class UserViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows users to be viewed or edited.
-    """
-
-    queryset = User.objects.all().order_by("-date_joined")
-    serializer_class = UserSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-
-class GroupViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows groups to be viewed or edited.
-    """
-
-    queryset = Group.objects.all().order_by("name")
-    serializer_class = GroupSerializer
-    permission_classes = [permissions.IsAuthenticated]
+from srs.srsapi.serializers import RegisterSerializer, WordSerializer
 
 
 class WordViewSet(viewsets.ModelViewSet):
@@ -39,8 +13,9 @@ class WordViewSet(viewsets.ModelViewSet):
     API endpoint that allows words to be viewed or edited.
     """
 
+    queryset = Word.objects.all().order_by("-last_reviewed")
     serializer_class = WordSerializer
-    permission_classes = [permissions.IsAuthenticated, IsOwnerOfObject]
+    permission_classes = [permissions.IsAuthenticated]
 
     def perform_create(self, serializer):
         # Automatically set the owner to the current authenticated user
