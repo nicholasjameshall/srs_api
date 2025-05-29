@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 from srs.srsapi.models import Word
+from srs.srsapi.permissions import IsOwnerOfObject
 from srs.srsapi.serializers import RegisterSerializer, WordSerializer
 
 
@@ -15,7 +16,7 @@ class WordViewSet(viewsets.ModelViewSet):
 
     queryset = Word.objects.all().order_by("-last_reviewed")
     serializer_class = WordSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, IsOwnerOfObject]
 
     def perform_create(self, serializer):
         # Automatically set the owner to the current authenticated user
