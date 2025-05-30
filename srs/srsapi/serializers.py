@@ -6,11 +6,24 @@ from rest_framework.validators import UniqueValidator
 from srs.srsapi.models import Word
 
 
-class WordSerializer(serializers.HyperlinkedModelSerializer):
+class WordSerializer(serializers.ModelSerializer):
     class Meta:
         model = Word
-        fields = ["id", "text", "last_reviewed", "owner"]
-        read_only_fields = ["owner"]
+        fields = [
+            "id",
+            "text",
+            "last_reviewed",
+            "next_review",
+            "repetitions",
+        ]
+        read_only_fields = [
+            "id",
+            "text",
+            "owner",
+            "last_reviewed",
+            "next_review",
+            "repetitions",
+        ]
 
 
 class RegisterSerializer(serializers.ModelSerializer):

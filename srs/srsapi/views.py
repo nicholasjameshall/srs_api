@@ -1,5 +1,9 @@
+from datetime import timedelta
+
 from django.contrib.auth.models import User
+from django.utils import timezone
 from rest_framework import generics, permissions, status, viewsets
+from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
@@ -24,6 +28,23 @@ class WordViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         return Word.objects.filter(owner=self.request.user).order_by("-last_reviewed")
+
+    @action(detail=True, methods=["post"], url_path="reviewed")
+    def word_reviewed(self, request, pk=None):
+        """
+        Marks a word as reviewed and updates its review schedule.
+        """
+        word = self.get_object()
+
+        word.last_reviewed = timezone.now()
+        word.repetitions += 1
+        word.next_review = word.last_reviewed + timedelta(days=2**word.repetitions)
+
+        word.save()  # Save the updated word
+
+        # Return the updated word instance. You can serialize it to show the new values.
+        serializer = self.get_serializer(word)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class RegisterView(generics.CreateAPIView):
