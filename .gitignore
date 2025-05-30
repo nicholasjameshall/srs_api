@@ -7,6 +7,8 @@
 *.pyc
 __pycache__/
 venv/
+final_env/
+.final_env/
 .pytest_cache/
 .coverage
 
